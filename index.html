@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Mon App Itunes</title>
+</head>
+
+<body>
+    <div>
+        <form id="myForm">
+            <input type="text" id="Name" placeholder="Name" />
+            <input value="Get Data" type="submit" />
+        </form>
+        <div id="tab"></div>
+    </div>
+</body>
+<script>
+   
+    const form = document.getElementById("myForm")
+    form.addEventListener('submit', function (e) {
+        e.preventDefault()
+
+        var Name = document.getElementById("Name").value
+
+        var url = `https://itunes.apple.com/search?country/fr&media/music&term=${Name}`
+
+        iTunes(url)
+    })
+
+$( document ).ready(function() {
+    async function iTunes(url) {
+        let response = await fetch(url)
+
+        console.log(response)
+        let data = await response.json()
+        console.log(data)
+
+        let tab =
+            `<tr> 
+                <th>artistName</th> 
+                <th>previewUrl</th> 
+                <th>country</th>
+            </tr>`;
+
+        // Loop to access all rows 
+
+        for (let val in data) {
+            for (let val2 in data[val]) {
+                console.log(val2, data[val][val2].trackName)
+
+                tab +=
+                `<tr> 
+                    <td>${data[val][val2].artistName} </td>
+                    <td>${data[val][val2].previewUrl} </td> 	 
+                    <td>${data[val][val2].country} </td> 	
+                </tr>`;
+            }
+        }
+
+
+        let tableau = document.getElementById("iTunes")
+            tableau.innerHTML=""
+            tableau.append(tab)
+
+        console.log(tab)
+        // Setting innerHTML as tab variable 
+        //document.getElementById("iTunes").innerHTML = tab;
+    } 
+});
+</script>
+
+</html>
