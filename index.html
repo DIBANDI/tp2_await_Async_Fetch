@@ -4,17 +4,39 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <title>Mon App Itunes</title>
 </head>
 
 <body>
-    <div>
-        <form id="myForm">
-            <input type="text" id="Name" placeholder="Name" />
-            <input value="Get Data" type="submit" />
-        </form>
-        <div id="tab"></div>
+    <div  class="container">
+      <div  class="form-control">
+        <form class="row g-3" id="myForm" >
+            <div class="col-auto">
+              <label for="inputPassword2" class="visually-hidden">Password</label>
+              <input type="text" class="form-control" id="Name" placeholder="Rechercher">
+            </div>
+            <div class="col-auto">
+              <input type="submit" class="btn btn-primary mb-3"/>
+            </div>
+          </form>
+        </div>
+        <table class="table table-hover" id="iTunes">
+            <thead>
+              <tr>
+                <th scope="col">Nom Artiste(e)</th>
+                <th scope="col">Intitule de la Chanson</th>
+                <th scope="col">Pays</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>   
     </div>
+     <!-- Option 1: Bootstrap Bundle with Popper -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
 <script>
    
@@ -24,12 +46,11 @@
 
         var Name = document.getElementById("Name").value
 
-        var url = `https://itunes.apple.com/search?country/fr&media/music&term=${Name}`
+        var url = `https://itunes.apple.com/search?country/fr&media/music&term=${Name}.`
 
         iTunes(url)
     })
 
-$( document ).ready(function() {
     async function iTunes(url) {
         let response = await fetch(url)
 
@@ -37,38 +58,30 @@ $( document ).ready(function() {
         let data = await response.json()
         console.log(data)
 
-        let tab =
-            `<tr> 
-                <th>artistName</th> 
-                <th>previewUrl</th> 
-                <th>country</th>
-            </tr>`;
+        //creer un tableau qui marche
+       
+            const tbody = document.querySelector( '#iTunes' ).querySelector( 'tbody')
 
-        // Loop to access all rows 
-
-        for (let val in data) {
+            for (let val in data) {
             for (let val2 in data[val]) {
-                console.log(val2, data[val][val2].trackName)
+            const ligne = tbody.insertRow()
 
-                tab +=
-                `<tr> 
-                    <td>${data[val][val2].artistName} </td>
-                    <td>${data[val][val2].previewUrl} </td> 	 
-                    <td>${data[val][val2].country} </td> 	
-                </tr>`;
+            // cellules activités
+            let cellArtistName = ligne.insertCell()
+            cellArtistName.innerHTML = data[val][val2].artistName
+
+            // cellules cotisations
+            let celltrackName = ligne.insertCell()
+            celltrackName.innerHTML = data[val][val2].trackName
+
+            // cellules choix
+            let cellCountry = ligne.insertCell()
+            cellCountry.innerHTML = data[val][val2].country
+  
             }
-        }
+        }    
 
-
-        let tableau = document.getElementById("iTunes")
-            tableau.innerHTML=""
-            tableau.append(tab)
-
-        console.log(tab)
-        // Setting innerHTML as tab variable 
-        //document.getElementById("iTunes").innerHTML = tab;
     } 
-});
 </script>
 
 </html>
